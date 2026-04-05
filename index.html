@@ -57,14 +57,7 @@
  </div>
  <div id="ml" class="mlist"></div>
  <div id="mod" class="modal">
- <div class="mc">
- <div class="mh">
- <button class="cbtn" onclick="cls()">✕</button>
- <h2 id="mn"></h2>
- <p id="mr"></p>
- </div>
- <div id="mb" class="mb"></div>
- </div>
+ <div class="mc"><div class="mh"><button class="cbtn" onclick="cls()">✕</button><h2 id="mn"></h2><p id="mr"></p></div><div id="mb" class="mb"></div></div>
  </div>
  <script>
  var D = [
@@ -117,45 +110,36 @@
  function cls(){document.getElementById('mod').style.display='none';}
  function snd(i){
  var m=D[i];
- var msg='Chapter: Distinction Online
-Month: '+CURR_MONTH+'
-
-Dear '+m.n+',
-
-*Current MTL: '+m.cm+' ('+sc2(m.cm)+')*
-
-*🎯 Your Targets (Nothing done = '+m.sq+')*
-
-*Option 1 (+1 — go '+m.o1m+' pts):*
-'+
- (m.o1t>0?'🎓 '+m.o1t+' x Training
-':'')+
- (m.o1v>0?'🤝 '+m.o1v+' x visitor to invite
-':'')+
- (m.o1j>0?'☕ '+m.o1j+' x 1-2-1s to complete
-':'')+
- (m.o1r>0?'📋 '+m.o1r+' x referrals to give
-':'')+
- '
-*Option 2 (Maintain/Go Green — '+m.o2m+'+):*
-'+
- (m.o2t>0?'🎓 '+m.o2t+' x Training
-':'')+
- (m.o2v>0?'🤝 '+m.o2v+' x visitor to invite
-':'')+
- (m.o2j>0?'☕ '+m.o2j+' x 1-2-1 to complete
-':'')+
- (m.o2r>0?'📋 '+m.o2r+' x referrals to give
-':'')+
- '
-Given With Love - BNI Distinction Online';
+ var msg=[
+ 'Chapter: Distinction Online',
+ 'Month: '+CURR_MONTH,
+ '',
+ 'Dear '+m.n+',',
+ '',
+ '*Current MTL: '+m.cm+' ('+sc2(m.cm)+')*',
+ '',
+ '*🎯 Your Targets (Nothing done = '+m.sq+')*',
+ '',
+ '*Option 1 (+1 — go '+m.o1m+' pts):*',
+ (m.o1t>0?'🎓 '+m.o1t+' x Training':null),
+ (m.o1v>0?'🤝 '+m.o1v+' x visitor to invite':null),
+ (m.o1j>0?'☕ '+m.o1j+' x 1-2-1s to complete':null),
+ (m.o1r>0?'📋 '+m.o1r+' x referrals to give':null),
+ '',
+ '*Option 2 (Maintain/Go Green — '+m.o2m+'+):*',
+ (m.o2t>0?'🎓 '+m.o2t+' x Training':null),
+ (m.o2v>0?'🤝 '+m.o2v+' x visitor to invite':null),
+ (m.o2j>0?'☕ '+m.o2j+' x 1-2-1 to complete':null),
+ (m.o2r>0?'📋 '+m.o2r+' x referrals to give':null),
+ '',
+ 'Given With Love - BNI Distinction Online'
+ ].filter(function(l){return l!==null;}).join(String.fromCharCode(10));
  window.open('https://wa.me/'+m.ph.replace(/[^0-9]/g,'')+'?text='+encodeURIComponent(msg),'_blank');
  }
  function upd(input){
  var reader = new FileReader();
  reader.onload = function(e){
- var lines = e.target.result.split('
-');
+ var lines = e.target.result.split(String.fromCharCode(10));
  if(lines.length<2) return;
  var newData = [];
  for(var i=1;i<lines.length;i++){
@@ -169,9 +153,7 @@ Given With Love - BNI Distinction Online';
  }
  function dl(){
  var h = "Name,Role,Phone,CurrentMTL,StatusQuo,O1_Pts,O1_Training,O1_Visitor,O1_Referral,O1_121,O2_Pts,O2_Training,O2_Visitor,O2_Referral,O2_121";
- var csv = h + "
-" + D.map(function(m){ return [m.n,m.ro,m.ph,m.cm,m.sq,m.o1m,m.o1t,m.o1v,m.o1r,m.o1j,m.o2m,m.o2t,m.o2v,m.o2r,m.o2j].join(","); }).join("
-");
+ var csv = h + String.fromCharCode(10) + D.map(function(m){ return [m.n,m.ro,m.ph,m.cm,m.sq,m.o1m,m.o1t,m.o1v,m.o1r,m.o1j,m.o2m,m.o2t,m.o2v,m.o2r,m.o2j].join(","); }).join(String.fromCharCode(10));
  var blob = new Blob([csv], {type:'text/csv'});
  var url = window.URL.createObjectURL(blob);
  var a = document.createElement('a'); a.setAttribute('href', url); a.setAttribute('download', 'mtl_data.csv'); a.click();
