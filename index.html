@@ -5,58 +5,58 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BNI CDO MTL Tracker</title>
   <style>
-    body { font-family: -apple-system, sans-serif; background: #f0f2f5; margin: 0; padding: 10px; }
-    .hdr { text-align: center; margin-bottom: 15px; background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    .hdr h1 { margin: 0; font-size: 20px; color: #1c1e21; }
-    .hdr p { margin: 5px 0 0; font-size: 11px; color: #65676b; text-transform: uppercase; letter-spacing: 0.5px; }
-    .srch { margin-bottom: 15px; }
-    #si { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; outline: none; }
-    .stats { font-size: 12px; color: #65676b; margin-bottom: 8px; font-weight: 600; }
-    .fbar { display: flex; gap: 6px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 4px; }
-    .fbtn { padding: 6px 12px; border: 1px solid #ddd; background: #fff; border-radius: 18px; font-size: 12px; cursor: pointer; white-space: nowrap; }
-    .fbtn.act { background: #0084ff; color: #fff; border-color: #0084ff; }
-    .mlist { display: grid; gap: 10px; }
-    .ocard { background: #fff; border-radius: 10px; padding: 12px; cursor: pointer; border: 1px solid #ddd; }
-    .ocard h4 { margin: 0 0 4px; font-size: 15px; }
-    .ocard p { margin: 0; font-size: 13px; color: #65676b; }
-    .ocard.g { border-left: 4px solid #28a745; }
-    .ocard.a { border-left: 4px solid #ffc107; }
-    .ocard.r { border-left: 4px solid #dc3545; }
-    .ocard.gr { border-left: 4px solid #6c757d; }
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 99; }
-    .mc { background: #fff; margin: 15% auto; width: 92%; max-width: 380px; border-radius: 15px; overflow: hidden; }
-    .mh { padding: 15px; background: #f7f8fa; border-bottom: 1px solid #eee; }
-    .cbtn { float: right; border: none; background: none; font-size: 20px; cursor: pointer; }
-    .mh h2 { margin: 0; font-size: 18px; }
-    .mh p { margin: 2px 0 0; font-size: 13px; color: #65676b; }
-    .mb { padding: 15px; }
-    .mrow { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
-    .ocard.sq, .ocard.o1, .ocard.o2 { cursor: default; margin-bottom: 8px; border-width: 1px 1px 1px 4px; }
-    .aitem { font-size: 12px; color: #4b4b4b; padding: 1px 0; }
-    .wabtn { display: block; width: 100%; background: #25d366; color: #fff; border: none; padding: 12px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 15px; text-align: center; }
+    body{font-family:-apple-system,sans-serif;background:#f0f2f5;margin:0;padding:10px}
+    .hdr{text-align:center;margin-bottom:15px;background:#fff;padding:15px;border-radius:12px;box-shadow:0 2px 4px rgba(0,0,0,.05)}
+    .hdr h1{margin:0;font-size:20px;color:#1c1e21}
+    .hdr p{margin:5px 0 0;font-size:11px;color:#65676b;text-transform:uppercase;letter-spacing:.5px}
+    .srch{margin-bottom:15px}
+    #si{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;font-size:15px;outline:none}
+    .stats{font-size:12px;color:#65676b;margin-bottom:8px;font-weight:600}
+    .fbar{display:flex;gap:6px;margin-bottom:15px;overflow-x:auto;padding-bottom:4px}
+    .fbtn{padding:6px 12px;border:1px solid #ddd;background:#fff;border-radius:18px;font-size:12px;cursor:pointer;white-space:nowrap}
+    .fbtn.act{background:#0084ff;color:#fff;border-color:#0084ff}
+    .mlist{display:grid;gap:10px}
+    .ocard{background:#fff;border-radius:10px;padding:12px;cursor:pointer;border:1px solid #ddd}
+    .ocard h4{margin:0 0 4px;font-size:15px}
+    .ocard p{margin:0;font-size:13px;color:#65676b}
+    .ocard.g{border-left:4px solid #28a745}
+    .ocard.a{border-left:4px solid #ffc107}
+    .ocard.r{border-left:4px solid #dc3545}
+    .ocard.gr{border-left:4px solid #6c757d}
+    .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:99}
+    .mc{background:#fff;margin:15% auto;width:92%;max-width:380px;border-radius:15px;overflow:hidden}
+    .mh{padding:15px;background:#f7f8fa;border-bottom:1px solid #eee}
+    .cbtn{float:right;border:none;background:none;font-size:20px;cursor:pointer}
+    .mh h2{margin:0;font-size:18px}
+    .mh p{margin:2px 0 0;font-size:13px;color:#65676b}
+    .mb{padding:15px}
+    .mrow{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:14px}
+    .ocard.sq,.ocard.o1,.ocard.o2{cursor:default;margin-bottom:8px;border-width:1px 1px 1px 4px}
+    .aitem{font-size:12px;color:#4b4b4b;padding:1px 0}
+    .wabtn{display:block;width:100%;background:#25d366;color:#fff;border:none;padding:12px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-top:15px;text-align:center}
   </style>
 </head>
 <body>
   <div class="hdr">
-    <h1>🏆 BNI CDO MTL Tracker</h1>
+    <h1>&#127942; BNI CDO MTL Tracker</h1>
     <p>BNI Distinction Online | Cheras Region</p>
   </div>
   <div class="srch">
-    <input type="text" id="si" placeholder="🔍 Search member..." oninput="filt()">
+    <input type="text" id="si" placeholder="Search member..." oninput="filt()">
   </div>
   <div class="stats" id="st"></div>
   <div class="fbar">
-    <button class="fbtn act" onclick="fst('all', this)">All</button>
-    <button class="fbtn" onclick="fst('g', this)">🟢 Green</button>
-    <button class="fbtn" onclick="fst('a', this)">🟡 Amber</button>
-    <button class="fbtn" onclick="fst('r', this)">🔴 Red</button>
-    <button class="fbtn" onclick="fst('gr', this)">⚪ Gray</button>
+    <button class="fbtn act" onclick="fst('all',this)">All</button>
+    <button class="fbtn" onclick="fst('g',this)">Green</button>
+    <button class="fbtn" onclick="fst('a',this)">Amber</button>
+    <button class="fbtn" onclick="fst('r',this)">Red</button>
+    <button class="fbtn" onclick="fst('gr',this)">Gray</button>
   </div>
   <div id="ml" class="mlist"></div>
   <div id="mod" class="modal">
     <div class="mc">
       <div class="mh">
-        <button class="cbtn" onclick="cls()">✕</button>
+        <button class="cbtn" onclick="cls()">&#x2715;</button>
         <h2 id="mn"></h2>
         <p id="mr"></p>
       </div>
@@ -64,90 +64,61 @@
     </div>
   </div>
   <script>
-    const D = [
-      {n: "Goh Yuan Kang", ro: "M", ph: "+601111567893", cm: 75, sq: 70, o1m: 80, o1t: 2, o1v: 8, o1r: 1, o2m: 100, o2t: 2, o2v: 8, o2r: 1},
-      {n: "Janifer Cheah", ro: "VP", ph: "+601111567893", cm: 75, sq: 55, o1m: 65, o1t: 3, o1v: 7, o1r: 1, o2m: 100, o2t: 3, o2v: 7, o2r: 1},
-      {n: "Karen Lee", ro: "CMC", ph: "+601111567893", cm: 80, sq: 75, o1m: 85, o1t: 1, o1v: 8, o1r: 2, o2m: 100, o2t: 1, o2v: 8, o2r: 2}
+    var D = [
+      {n:"Goh Yuan Kang",ro:"M",ph:"+601111567893",cm:75,sq:70,o1m:80,o1t:2,o1v:8,o1r:1,o2m:100,o2t:2,o2v:8,o2r:1},
+      {n:"Janifer Cheah",ro:"VP",ph:"+601111567893",cm:75,sq:55,o1m:65,o1t:3,o1v:7,o1r:1,o2m:100,o2t:3,o2v:7,o2r:1},
+      {n:"Karen Lee",ro:"CMC",ph:"+601111567893",cm:80,sq:75,o1m:85,o1t:1,o1v:8,o1r:2,o2m:100,o2t:1,o2v:8,o2r:2}
     ];
-
-    const cMap = { Green: 'g', Amber: 'a', Red: 'r', Gray: 'gr' };
-    function sc2(v) {
-      if (v >= 75) return 'Green';
-      if (v >= 50) return 'Amber';
-      if (v >= 30) return 'Red';
-      return 'Gray';
-    }
-
-    function filt() {
-      const q = document.getElementById('si').value.toLowerCase();
-      render(D.filter(m => m.n.toLowerCase().includes(q)));
-    }
-
-    function fst(s, b) {
-      document.querySelectorAll('.fbtn').forEach(f => f.classList.remove('act'));
-      b.classList.add('act');
-      if (s === 'all') return render(D);
-      render(D.filter(m => cMap[sc2(m.cm)] === s));
-    }
-
-    function render(data) {
-      const ml = document.getElementById('ml');
-      const st = document.getElementById('st');
-      ml.innerHTML = '';
-      data.forEach(m => {
-        const card = document.createElement('div');
-        card.className = `ocard ${cMap[sc2(m.cm)]}`;
-        card.onclick = () => shw(D.indexOf(m));
-        card.innerHTML = `<h4>${m.n}</h4><p>${m.ro} | ${m.cm} pts</p>`;
+    var cMap={Green:'g',Amber:'a',Red:'r',Gray:'gr'};
+    function sc2(v){return v>=75?'Green':v>=50?'Amber':v>=30?'Red':'Gray';}
+    function filt(){var q=document.getElementById('si').value.toLowerCase();render(D.filter(function(m){return m.n.toLowerCase().indexOf(q)>-1;}));}
+    function fst(s,b){document.querySelectorAll('.fbtn').forEach(function(f){f.classList.remove('act');});b.classList.add('act');if(s==='all'){render(D);}else{render(D.filter(function(m){return cMap[sc2(m.cm)]===s;}));}}
+    function render(data){
+      var ml=document.getElementById('ml');
+      var st=document.getElementById('st');
+      ml.innerHTML='';
+      data.forEach(function(m){
+        var card=document.createElement('div');
+        card.className='ocard '+cMap[sc2(m.cm)];
+        card.onclick=function(){shw(D.indexOf(m));};
+        card.innerHTML='<h4>'+m.n+'</h4><p>'+m.ro+' | '+m.cm+' pts</p>';
         ml.appendChild(card);
       });
-      st.innerText = `${data.length} Member(s)`;
+      st.innerText=data.length+' Member(s)';
     }
-
-    function shw(i) {
-      const m = D[i];
-      document.getElementById('mn').innerText = m.n;
-      document.getElementById('mr').innerText = m.ro;
-      const mb = document.getElementById('mb');
-      mb.innerHTML = `
-        <div class="ocard sq"><h4>Status Quo</h4><div class="aitem">Points: ${m.sq} pts</div></div>
-        <div class="ocard o1"><h4>Option 1: Level Up to ${sc2(m.o1m)}</h4>
-          ${m.o1t>0?'<div class="aitem">🎓 Training: '+m.o1t+' session(s)</div>':''}
-          ${m.o1v>0?'<div class="aitem">👥 Visitors: '+m.o1v+'</div>':''}
-          ${m.o1r>0?'<div class="aitem">📝 Referrals: '+m.o1r+'</div>':''}
-          <div class="aitem">Target: ${m.o1m} pts</div>
-        </div>
-        <div class="ocard o2"><h4>Option 2: Go Green</h4>
-          ${m.o2t>0?'<div class="aitem">🎓 Training: '+m.o2t+' session(s)</div>':''}
-          ${m.o2v>0?'<div class="aitem">👥 Visitors: '+m.o2v+'</div>':''}
-          ${m.o2r>0?'<div class="aitem">📝 Referrals: '+m.o2r+'</div>':''}
-          <div class="aitem">Target: ${m.o2m} pts</div>
-        </div>
-        <button class="wabtn" onclick="snd(${i})">Send WhatsApp Message</button>
-      `;
-      document.getElementById('mod').style.display = 'block';
+    function shw(i){
+      var m=D[i];
+      document.getElementById('mn').innerText=m.n;
+      document.getElementById('mr').innerText=m.ro;
+      var mb=document.getElementById('mb');
+      mb.innerHTML='<div class="ocard sq"><h4>Status Quo</h4><div class="aitem">Points: '+m.sq+' pts</div></div>'+
+        '<div class="ocard o1"><h4>Option 1: Level Up to '+sc2(m.o1m)+'</h4>'+
+        (m.o1t>0?'<div class="aitem">Training: '+m.o1t+' session(s)</div>':'')+
+        (m.o1v>0?'<div class="aitem">Visitors: '+m.o1v+'</div>':'')+
+        (m.o1r>0?'<div class="aitem">Referrals: '+m.o1r+'</div>':'')+
+        '<div class="aitem">Target: '+m.o1m+' pts</div></div>'+
+        '<div class="ocard o2"><h4>Option 2: Go Green</h4>'+
+        (m.o2t>0?'<div class="aitem">Training: '+m.o2t+' session(s)</div>':'')+
+        (m.o2v>0?'<div class="aitem">Visitors: '+m.o2v+'</div>':'')+
+        (m.o2r>0?'<div class="aitem">Referrals: '+m.o2r+'</div>':'')+
+        '<div class="aitem">Target: '+m.o2m+' pts</div></div>'+
+        '<button class="wabtn" onclick="snd('+i+')">Send WhatsApp Message</button>';
+      document.getElementById('mod').style.display='block';
     }
-
-    function cls() { document.getElementById('mod').style.display = 'none'; }
-
-    function snd(i) {
-      const m = D[i];
-      const msg = encodeURIComponent(\`Dear \${m.n},
-
-*Current MTL: \${m.cm} (\${sc2(m.cm)})*
-
-*Status Quo (no effort):* \${m.sq} pts
-
-*Option 1 - Level Up to \${sc2(m.o1m)}:*
-\${m.o1t>0?'🎓 Training: '+m.o1t+' session(s) ':''}\${m.o1v>0?'👥 Visitors: '+m.o1v+' ':''}\${m.o1r>0?'📝 Referrals: '+m.o1r+' ':''}Target: \${m.o1m} pts
-
-*Option 2 - Go Green (75 pts):*
-\${m.o2t>0?'🎓 Training: '+m.o2t+' session(s) ':''}\${m.o2v>0?'👥 Visitors: '+m.o2v+' ':''}\${m.o2r>0?'📝 Referrals: '+m.o2r+' ':''}Target: \${m.o2m} pts
-
-Given With Love - BNI Distinction Online\`);
-      window.open(\`https://wa.me/\${m.ph.replace(/[^0-9]/g,'')}?text=\${msg}\`, '_blank');
+    function cls(){document.getElementById('mod').style.display='none';}
+    function snd(i){
+      var m=D[i];
+      var msg='Dear '+m.n+',\n\n*Current MTL: '+m.cm+' ('+sc2(m.cm)+')*\n\n*Status Quo (no effort):* '+m.sq+' pts\n\n*Option 1 - Level Up to '+sc2(m.o1m)+':*\n'+
+        (m.o1t>0?'Training: '+m.o1t+' session(s) ':'')+
+        (m.o1v>0?'Visitors: '+m.o1v+' ':'')+
+        (m.o1r>0?'Referrals: '+m.o1r+' ':'')+
+        'Target: '+m.o1m+' pts\n\n*Option 2 - Go Green (75 pts):*\n'+
+        (m.o2t>0?'Training: '+m.o2t+' session(s) ':'')+
+        (m.o2v>0?'Visitors: '+m.o2v+' ':'')+
+        (m.o2r>0?'Referrals: '+m.o2r+' ':'')+
+        'Target: '+m.o2m+' pts\n\nGiven With Love - BNI Distinction Online';
+      window.open('https://wa.me/'+m.ph.replace(/[^0-9]/g,'')+'?text='+encodeURIComponent(msg),'_blank');
     }
-
     render(D);
   </script>
 </body>
