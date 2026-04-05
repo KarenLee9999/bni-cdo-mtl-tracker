@@ -1,164 +1,148 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>BNI CDO MTL Tracker</title>
- <style>
- body{font-family:-apple-system,sans-serif;background:#f0f2f5;margin:0;padding:10px}
- .hdr{text-align:center;margin-bottom:15px;background:#fff;padding:15px;border-radius:12px;box-shadow:0 2px 4px rgba(0,0,0,.05)}
- .hdr h1{margin:0;font-size:20px;color:#1c1e21}
- .hdr p{margin:5px 0 0;font-size:11px;color:#65676b;text-transform:uppercase;letter-spacing:.5px}
- .srch{margin-bottom:15px}
- #si{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;font-size:15px;outline:none}
- .stats{font-size:12px;color:#65676b;margin-bottom:8px;font-weight:600}
- .fbar{display:flex;gap:6px;margin-bottom:15px;overflow-x:auto;padding-bottom:4px}
- .fbtn{padding:6px 12px;border:1px solid #ddd;background:#fff;border-radius:18px;font-size:12px;cursor:pointer;white-space:nowrap}
- .fbtn.act{background:#0084ff;color:#fff;border-color:#0084ff}
- .mlist{display:grid;gap:10px}
- .ocard{background:#fff;border-radius:10px;padding:12px;cursor:pointer;border:1px solid #ddd}
- .ocard h4{margin:0 0 4px;font-size:15px}
- .ocard p{margin:0;font-size:13px;color:#65676b}
- .ocard.g{border-left:4px solid #28a745}
- .ocard.a{border-left:4px solid #ffc107}
- .ocard.r{border-left:4px solid #dc3545}
- .ocard.gr{border-left:4px solid #6c757d}
- .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:99}
- .mc{background:#fff;margin:15% auto;width:92%;max-width:380px;border-radius:15px;overflow:hidden}
- .mh{padding:15px;background:#f7f8fa;border-bottom:1px solid #eee}
- .cbtn{float:right;border:none;background:none;font-size:20px;cursor:pointer}
- .mh h2{margin:0;font-size:18px}
- .mh p{margin:2px 0 0;font-size:13px;color:#65676b}
- .mb{padding:15px}
- .mrow{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:14px}
- .ocard.sq,.ocard.o1,.ocard.o2{cursor:default;margin-bottom:8px;border-width:1px 1px 1px 4px}
- .aitem{font-size:12px;color:#4b4b4b;padding:1px 0}
- .wabtn{display:block;width:100%;background:#25d366;color:#fff;border:none;padding:12px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-top:15px;text-align:center}
- </style>
-</head>
-<body>
- <div class="hdr">
- <h1>🏆 BNI CDO MTL Tracker</h1>
- <p id="hd_month">BNI Distinction Online | March 2026</p>
- </div>
- <div class="srch">
- <input type="text" id="si" placeholder="🔍 Search member..." oninput="filt()">
- </div>
- <div class="stats" id="st"></div>
- <div class="fbar">
- <button class="fbtn act" onclick="fst('all',this)">All</button>
- <button class="fbtn" onclick="fst('g',this)">🟢 Green</button>
- <button class="fbtn" onclick="fst('a',this)">🟡 Amber</button>
- <button class="fbtn" onclick="fst('r',this)">🔴 Red</button>
- <button class="fbtn" onclick="fst('gr',this)">⚪ Gray</button>
- <button class="fbtn" style="background:#6c757d;color:#fff" onclick="dl()">💾 Export</button>
- <button class="fbtn" style="background:#28a745;color:#fff" onclick="document.getElementById('csv').click()">📁 Update</button>
- <input type="file" id="csv" style="display:none" onchange="upd(this)" accept=".csv">
- </div>
- <div id="ml" class="mlist"></div>
- <div id="mod" class="modal">
- <div class="mc"><div class="mh"><button class="cbtn" onclick="cls()">✕</button><h2 id="mn"></h2><p id="mr"></p></div><div id="mb" class="mb"></div></div>
- </div>
- <script>
- var D = [
- {n:"Goh Yuan Kang",ro:"M",ph:"+601111567893",cm:75,sq:70,o1m:80,o1t:3,o1v:1,o1r:2,o1j:2,o2m:75,o2t:1,o2v:1,o2r:0,o2j:1},
- {n:"Janifer Cheah",ro:"VP",ph:"+601111567893",cm:75,sq:47,o1m:80,o1t:1,o1v:1,o1r:1,o1j:8,o2m:75,o2t:1,o2v:1,o2r:8,o2j:1},
- {n:"Karen Lee",ro:"CMC",ph:"+601111567893",cm:80,sq:53,o1m:85,o1t:2,o1v:1,o1r:2,o1j:1,o2m:100,o2t:1,o2v:1,o2r:1,o2j:1},
- {n:"William Lim",ro:"Member",ph:"+601111567893",cm:15,sq:10,o1m:20,o1t:6,o1v:12,o1r:36,o1j:34,o2m:75,o2t:2,o2v:1,o2r:12,o2j:10},
- {n:"Albert Lee",ro:"Member",ph:"+601111567893",cm:15,sq:10,o1m:40,o1t:6,o1v:12,o1r:36,o1j:33,o2m:100,o2t:2,o2v:1,o2r:12,o2j:9},
- {n:"Hao Mun Yow",ro:"Member",ph:"+601111567893",cm:15,sq:15,o1m:40,o1t:2,o1v:4,o1r:12,o1j:12,o2m:100,o2t:1,o2v:1,o2r:4,o2j:4},
- {n:"Kelvin Chee",ro:"Member",ph:"+601111567893",cm:15,sq:15,o1m:40,o1t:2,o1v:4,o1r:12,o1j:12,o2m:100,o2t:1,o2v:1,o2r:4,o2j:4},
- {n:"Khoo Junde",ro:"CEC",ph:"+601111567893",cm:30,sq:25,o1m:35,o1t:6,o1v:12,o1r:22,o1j:11,o2m:75,o2t:1,o2v:1,o2r:1,o2j:2}
- ];
- var CURR_MONTH = "March 2026";
- var cMap={Green:'g',Amber:'a',Red:'r',Gray:'gr'};
- function sc2(v){return v>=75?'Green':v>=50?'Amber':v>=30?'Red':'Gray';}
- function filt(){var q=document.getElementById('si').value.toLowerCase();render(D.filter(function(m){return m.n.toLowerCase().indexOf(q)>-1;}));}
- function fst(s,b){document.querySelectorAll('.fbtn').forEach(function(f){f.classList.remove('act');});b.classList.add('act');if(s==='all'){render(D);}else{render(D.filter(function(m){return cMap[sc2(m.cm)]===s;}));}}
- function render(data){
- var ml=document.getElementById('ml');
- var st=document.getElementById('st');
- ml.innerHTML='';
- data.forEach(function(m){
- var card=document.createElement('div');
- card.className='ocard '+cMap[sc2(m.cm)];
- card.onclick=function(){shw(D.indexOf(m));};
- card.innerHTML='<h4>'+m.n+'</h4><p>'+m.ro+' | '+m.cm+' pts</p>';
- ml.appendChild(card);
- });
- st.innerText=data.length+' Member(s)';
- }
- function shw(i){
- var m=D[i];
- document.getElementById('mn').innerText=m.n;
- document.getElementById('mr').innerText=m.ro;
- var mb=document.getElementById('mb');
- mb.innerHTML='<div class="ocard sq"><h4>🎯 Your Targets</h4><div class="aitem">Nothing done: '+m.sq+' pts</div></div>'+
- '<div class="ocard o1"><h4>Option 1: Level Up to '+sc2(m.o1m)+' ('+m.o1m+' pts)</h4>'+
- (m.o1t>0?'<div class="aitem">🎓 '+m.o1t+' x Training</div>':'')+
- (m.o1v>0?'<div class="aitem">🤝 '+m.o1v+' x visitor to invite</div>':'')+
- (m.o1j>0?'<div class="aitem">☕ '+m.o1j+' x 1-2-1s to complete</div>':'')+
- (m.o1r>0?'<div class="aitem">📋 '+m.o1r+' x referrals to give</div>':'')+'</div>'+
- '<div class="ocard o2"><h4>Option 2: Go Green ('+m.o2m+' pts)</h4>'+
- (m.o2t>0?'<div class="aitem">🎓 '+m.o2t+' x Training</div>':'')+
- (m.o2v>0?'<div class="aitem">🤝 '+m.o2v+' x visitor to invite</div>':'')+
- (m.o2j>0?'<div class="aitem">☕ '+m.o2j+' x 1-2-1s to complete</div>':'')+
- (m.o2r>0?'<div class="aitem">📋 '+m.o2r+' x referrals to give</div>':'')+'</div>'+
- '<button class="wabtn" onclick="snd('+i+')">Send WhatsApp Message</button>';
- document.getElementById('mod').style.display='block';
- }
- function cls(){document.getElementById('mod').style.display='none';}
- function snd(i){
- var m=D[i];
- var msg=[
- 'Chapter: Distinction Online',
- 'Month: '+CURR_MONTH,
- '',
- 'Dear '+m.n+',',
- '',
- '*Current MTL: '+m.cm+' ('+sc2(m.cm)+')*',
- '',
- '*🎯 Your Targets (Nothing done = '+m.sq+')*',
- '',
- '*Option 1 (+1 — go '+m.o1m+' pts):*',
- (m.o1t>0?'🎓 '+m.o1t+' x Training':null),
- (m.o1v>0?'🤝 '+m.o1v+' x visitor to invite':null),
- (m.o1j>0?'☕ '+m.o1j+' x 1-2-1s to complete':null),
- (m.o1r>0?'📋 '+m.o1r+' x referrals to give':null),
- '',
- '*Option 2 (Maintain/Go Green — '+m.o2m+'+):*',
- (m.o2t>0?'🎓 '+m.o2t+' x Training':null),
- (m.o2v>0?'🤝 '+m.o2v+' x visitor to invite':null),
- (m.o2j>0?'☕ '+m.o2j+' x 1-2-1 to complete':null),
- (m.o2r>0?'📋 '+m.o2r+' x referrals to give':null),
- '',
- 'Given With Love - BNI Distinction Online'
- ].filter(function(l){return l!==null;}).join(String.fromCharCode(10));
- window.open('https://wa.me/'+m.ph.replace(/[^0-9]/g,'')+'?text='+encodeURIComponent(msg),'_blank');
- }
- function upd(input){
- var reader = new FileReader();
- reader.onload = function(e){
- var lines = e.target.result.split(String.fromCharCode(10));
- if(lines.length<2) return;
- var newData = [];
- for(var i=1;i<lines.length;i++){
- var c = lines[i].split(',');
- if(c.length<15) continue;
- newData.push({n:c[0],ro:c[1],ph:c[2],cm:parseInt(c[3]),sq:parseInt(c[4]),o1m:parseInt(c[5]),o1t:parseInt(c[6]),o1v:parseInt(c[7]),o1r:parseInt(c[8]),o1j:parseInt(c[9]),o2m:parseInt(c[10]),o2t:parseInt(c[11]),o2v:parseInt(c[12]),o2r:parseInt(c[13]),o2j:parseInt(c[14])});
- }
- if(newData.length>0){ D = newData; render(D); alert('Imported '+D.length+' members!'); }
- };
- reader.readAsText(input.files[0]);
- }
- function dl(){
- var h = "Name,Role,Phone,CurrentMTL,StatusQuo,O1_Pts,O1_Training,O1_Visitor,O1_Referral,O1_121,O2_Pts,O2_Training,O2_Visitor,O2_Referral,O2_121";
- var csv = h + String.fromCharCode(10) + D.map(function(m){ return [m.n,m.ro,m.ph,m.cm,m.sq,m.o1m,m.o1t,m.o1v,m.o1r,m.o1j,m.o2m,m.o2t,m.o2v,m.o2r,m.o2j].join(","); }).join(String.fromCharCode(10));
- var blob = new Blob([csv], {type:'text/csv'});
- var url = window.URL.createObjectURL(blob);
- var a = document.createElement('a'); a.setAttribute('href', url); a.setAttribute('download', 'mtl_data.csv'); a.click();
- }
- render(D);
- </script>
-</body>
-</html>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>BNI CDO MTL Tracker</title><style>
+body{font-family:-apple-system,sans-serif;background:#f0f2f5;margin:0;padding:10px}
+.hdr{text-align:center;margin-bottom:15px;background:#fff;padding:15px;border-radius:12px;box-shadow:0 2px 4px rgba(0,0,0,.05)}
+.hdr h1{margin:0;font-size:20px;color:#1c1e21}
+.hdr p{margin:5px 0 0;font-size:11px;color:#65676b;text-transform:uppercase;letter-spacing:.5px}
+.srch{margin-bottom:15px}
+#si{width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;font-size:15px;outline:none}
+.stats{font-size:12px;color:#65676b;margin-bottom:8px;font-weight:600}
+.fbar{display:flex;gap:6px;margin-bottom:15px;overflow-x:auto;padding-bottom:4px}
+.fbtn{padding:6px 12px;border:1px solid #ddd;background:#fff;border-radius:18px;font-size:12px;cursor:pointer;white-space:nowrap}
+.fbtn.act{background:#0084ff;color:#fff;border-color:#0084ff}
+.mlist{display:grid;gap:10px}
+.ocard{background:#fff;border-radius:10px;padding:12px;cursor:pointer;border:1px solid #ddd}
+.ocard h4{margin:0 0 4px;font-size:15px}
+.ocard p{margin:0;font-size:13px;color:#65676b}
+.ocard.g{border-left:4px solid #28a745}
+.ocard.a{border-left:4px solid #ffc107}
+.ocard.r{border-left:4px solid #dc3545}
+.ocard.gr{border-left:4px solid #6c757d}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:99}
+.mc{background:#fff;margin:15% auto;width:92%;max-width:380px;border-radius:15px;overflow:hidden}
+.mh{padding:15px;background:#f7f8fa;border-bottom:1px solid #eee}
+.cbtn{float:right;border:none;background:none;font-size:20px;cursor:pointer}
+.mh h2{margin:0;font-size:18px}
+.mh p{margin:2px 0 0;font-size:13px;color:#65676b}
+.mb{padding:15px}
+.mrow{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:14px}
+.ocard.sq,.ocard.o1,.ocard.o2{cursor:default;margin-bottom:8px;border-width:1px 1px 1px 4px}
+.aitem{font-size:12px;color:#4b4b4b;padding:1px 0}
+.wabtn{display:block;width:100%;background:#25d366;color:#fff;border:none;padding:12px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-top:15px;text-align:center}
+.cpbtn{display:block;width:100%;background:#f0f2f5;color:#1c1e21;border:1px solid #ddd;padding:10px;border-radius:10px;font-size:13px;cursor:pointer;margin-top:8px;text-align:center}
+</style></head><body>
+<div class="hdr"><h1>🏆 BNI CDO MTL Tracker</h1><p id="hd_month">BNI Distinction Online | March 2026</p></div>
+<div class="srch"><input type="text" id="si" placeholder="🔍 Search member..." oninput="filt()"></div>
+<div class="stats" id="st"></div>
+<div class="fbar">
+<button class="fbtn act" onclick="fst('all',this)">All</button>
+<button class="fbtn" onclick="fst('g',this)">🟢 Green</button>
+<button class="fbtn" onclick="fst('a',this)">🟡 Amber</button>
+<button class="fbtn" onclick="fst('r',this)">🔴 Red</button>
+<button class="fbtn" onclick="fst('gr',this)">⚪ Gray</button>
+<button class="fbtn" style="background:#6c757d;color:#fff" onclick="dl()">💾 Export</button>
+<button class="fbtn" style="background:#28a745;color:#fff" onclick="document.getElementById('csv').click()">📁 Update</button>
+<button class="fbtn" style="background:#0084ff;color:#fff" onclick="cpUrl()">🔗 Copy Link</button>
+<input type="file" id="csv" style="display:none" onchange="upd(this)" accept=".csv">
+</div>
+<div id="ml" class="mlist"></div>
+<div id="mod" class="modal"><div class="mc"><div class="mh"><button class="cbtn" onclick="cls()">✕</button><h2 id="mn"></h2><p id="mr"></p></div><div id="mb" class="mb"></div></div></div>
+<script>
+var D = [
+{n:"Goh Yuan Kang",ro:"M",ph:"+601111567893",cm:75,sq:70,o1m:80,o1t:3,o1v:1,o1r:2,o1j:2,o2m:75,o2t:1,o2v:1,o2r:0,o2j:1},
+{n:"Janifer Cheah",ro:"VP",ph:"+601111567893",cm:75,sq:47,o1m:80,o1t:1,o1v:1,o1r:1,o1j:8,o2m:75,o2t:1,o2v:1,o2r:8,o2j:1},
+{n:"Karen Lee",ro:"CMC",ph:"+601111567893",cm:80,sq:53,o1m:85,o1t:2,o1v:1,o1r:2,o1j:1,o2m:100,o2t:1,o2v:1,o2r:1,o2j:1},
+{n:"William Lim",ro:"Member",ph:"+601111567893",cm:15,sq:10,o1m:20,o1t:6,o1v:12,o1r:36,o1j:34,o2m:75,o2t:2,o2v:1,o2r:12,o2j:10},
+{n:"Albert Lee",ro:"Member",ph:"+601111567893",cm:15,sq:10,o1m:40,o1t:6,o1v:12,o1r:36,o1j:33,o2m:100,o2t:2,o2v:1,o2r:12,o2j:9},
+{n:"Hao Mun Yow",ro:"Member",ph:"+601111567893",cm:15,sq:15,o1m:40,o1t:2,o1v:4,o1r:12,o1j:12,o2m:100,o2t:1,o2v:1,o2r:4,o2j:4},
+{n:"Kelvin Chee",ro:"Member",ph:"+601111567893",cm:15,sq:15,o1m:40,o1t:2,o1v:4,o1r:12,o1j:12,o2m:100,o2t:1,o2v:1,o2r:4,o2j:4},
+{n:"Khoo Junde",ro:"CEC",ph:"+601111567893",cm:30,sq:25,o1m:35,o1t:6,o1v:12,o1r:22,o1j:11,o2m:75,o2t:1,o2v:1,o2r:1,o2j:2},
+{n:"Chua Bee Leng",ro:"Member",ph:"+601111567893",cm:45,sq:40,o1m:50,o1t:2,o1v:2,o1r:5,o1j:4,o2m:75,o2t:4,o2v:3,o2r:10,o2j:8},
+{n:"Low Yi Ting",ro:"Member",ph:"+601111567893",cm:65,sq:60,o1m:75,o1t:1,o1v:1,o1r:3,o1j:2,o2m:80,o2t:2,o2v:2,o2r:6,o2j:4}
+];
+var CURR_MONTH = "March 2026";
+var cMap={Green:'g',Amber:'a',Red:'r',Gray:'gr'};
+function sc2(v){return v>=75?'Green':v>=50?'Amber':v>=30?'Red':'Gray';}
+function filt(){var q=document.getElementById('si').value.toLowerCase();render(D.filter(function(m){return m.n.toLowerCase().indexOf(q)>-1;}));}
+function fst(s,b){document.querySelectorAll('.fbtn').forEach(function(f){f.classList.remove('act');});b.classList.add('act');if(s==='all'){render(D);}else{render(D.filter(function(m){return cMap[sc2(m.cm)]===s;}));}}
+function render(data){
+var ml=document.getElementById('ml'); var st=document.getElementById('st'); ml.innerHTML='';
+data.forEach(function(m){
+var card=document.createElement('div'); card.className='ocard '+cMap[sc2(m.cm)];
+card.onclick=function(){shw(D.indexOf(m));};
+card.innerHTML='<h4>'+m.n+'</h4><p>'+m.ro+' | '+m.cm+' pts</p>';
+ml.appendChild(card);
+});
+st.innerText=data.length+' Member(s)';
+}
+function shw(i){
+var m=D[i]; document.getElementById('mn').innerText=m.n; document.getElementById('mr').innerText=m.ro;
+var mb=document.getElementById('mb');
+mb.innerHTML='<div class="ocard sq"><h4>🎯 Your Targets</h4><div class="aitem">Nothing done: '+m.sq+' pts</div></div>'+
+'<div class="ocard o1"><h4>Option 1: Level Up to '+sc2(m.o1m)+' ('+m.o1m+' pts)</h4>'+
+(m.o1t>0?'<div class="aitem">🎓 '+m.o1t+' x Training</div>':'')+
+(m.o1v>0?'<div class="aitem">🤝 '+m.o1v+' x visitor to invite</div>':'')+
+(m.o1j>0?'<div class="aitem">☕ '+m.o1j+' x 1-2-1s to complete</div>':'')+
+(m.o1r>0?'<div class="aitem">📋 '+m.o1r+' x referrals to give</div>':'')+'</div>'+
+'<div class="ocard o2"><h4>Option 2: Go Green ('+m.o2m+' pts)</h4>'+
+(m.o2t>0?'<div class="aitem">🎓 '+m.o2t+' x Training</div>':'')+
+(m.o2v>0?'<div class="aitem">🤝 '+m.o2v+' x visitor to invite</div>':'')+
+(m.o2j>0?'<div class="aitem">☕ '+m.o2j+' x 1-2-1s to complete</div>':'')+
+(m.o2r>0?'<div class="aitem">📋 '+m.o2r+' x referrals to give</div>':'')+'</div>'+
+'<button class="wabtn" onclick="snd('+i+')">Send WhatsApp Message</button>'+
+'<button class="cpbtn" onclick="cpTxt('+i+')">📋 Copy Stats to Clipboard</button>';
+document.getElementById('mod').style.display='block';
+}
+function cls(){document.getElementById('mod').style.display='none';}
+function snd(i){
+var m=D[i];
+var msg=[
+'Chapter: Distinction Online','Month: '+CURR_MONTH,'','Dear '+m.n+',','',
+'*Current MTL: '+m.cm+' ('+sc2(m.cm)+')*','',
+'*🎯 Your Targets (Nothing done = '+m.sq+')*','',
+'*Option 1 (+1 — go '+m.o1m+' pts):*',
+(m.o1t>0?'🎓 '+m.o1t+' x Training':null),
+(m.o1v>0?'🤝 '+m.o1v+' x visitor to invite':null),
+(m.o1j>0?'☕ '+m.o1j+' x 1-2-1s to complete':null),
+(m.o1r>0?'📋 '+m.o1r+' x referrals to give':null),'',
+'*Option 2 (Maintain/Go Green — '+m.o2m+'+):*',
+(m.o2t>0?'🎓 '+m.o2t+' x Training':null),
+(m.o2v>0?'🤝 '+m.o2v+' x visitor to invite':null),
+(m.o2j>0?'☕ '+m.o2j+' x 1-2-1 to complete':null),
+(m.o2r>0?'📋 '+m.o2r+' x referrals to give':null),'',
+'Given With Love - BNI Distinction Online'
+].filter(function(l){return l!==null;}).join(String.fromCharCode(10));
+window.open('https://wa.me/'+m.ph.replace(/[^0-9]/g,'')+'?text='+encodeURIComponent(msg),'_blank');
+}
+function cpTxt(i){
+var m=D[i];
+var txt = 'Member: '+m.n+'
+MTL: '+m.cm+'
+Targets: '+m.sq+' pts
+Option 1: '+m.o1m+' pts
+Option 2: '+m.o2m+' pts';
+navigator.clipboard.writeText(txt).then(function(){alert('Stats copied to clipboard!');});
+}
+function cpUrl(){
+navigator.clipboard.writeText(window.location.href).then(function(){alert('Link copied to clipboard!');});
+}
+function upd(input){
+var reader = new FileReader();
+reader.onload = function(e){
+var lines = e.target.result.split(String.fromCharCode(10)); if(lines.length<2) return;
+var newData = [];
+for(var i=1;i<lines.length;i++){
+var c = lines[i].split(','); if(c.length<15) continue;
+newData.push({n:c[0],ro:c[1],ph:c[2],cm:parseInt(c[3]),sq:parseInt(c[4]),o1m:parseInt(c[5]),o1t:parseInt(c[6]),o1v:parseInt(c[7]),o1r:parseInt(c[8]),o1j:parseInt(c[9]),o2m:parseInt(c[10]),o2t:parseInt(c[11]),o2v:parseInt(c[12]),o2r:parseInt(c[13]),o2j:parseInt(c[14])});
+}
+if(newData.length>0){ D = newData; render(D); alert('Imported '+D.length+' members!'); }
+};
+reader.readAsText(input.files[0]);
+}
+function dl(){
+var h = "Name,Role,Phone,CurrentMTL,StatusQuo,O1_Pts,O1_Training,O1_Visitor,O1_Referral,O1_121,O2_Pts,O2_Training,O2_Visitor,O2_Referral,O2_121";
+var csv = h + String.fromCharCode(10) + D.map(function(m){ return [m.n,m.ro,m.ph,m.cm,m.sq,m.o1m,m.o1t,m.o1v,m.o1r,m.o1j,m.o2m,m.o2t,m.o2v,m.o2r,m.o2j].join(","); }).join(String.fromCharCode(10));
+var blob = new Blob([csv], {type:'text/csv'}); var url = window.URL.createObjectURL(blob);
+var a = document.createElement('a'); a.setAttribute('href', url); a.setAttribute('download', 'mtl_data.csv'); a.click();
+}
+render(D);
+</script></body></html>
