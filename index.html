@@ -38,25 +38,25 @@
 </head>
 <body>
   <div class="hdr">
-    <h1>&#127942; BNI CDO MTL Tracker</h1>
+    <h1>🏆 BNI CDO MTL Tracker</h1>
     <p>BNI Distinction Online | Cheras Region</p>
   </div>
   <div class="srch">
-    <input type="text" id="si" placeholder="Search member..." oninput="filt()">
+    <input type="text" id="si" placeholder="🔍 Search member..." oninput="filt()">
   </div>
   <div class="stats" id="st"></div>
   <div class="fbar">
     <button class="fbtn act" onclick="fst('all',this)">All</button>
-    <button class="fbtn" onclick="fst('g',this)">Green</button>
-    <button class="fbtn" onclick="fst('a',this)">Amber</button>
-    <button class="fbtn" onclick="fst('r',this)">Red</button>
-    <button class="fbtn" onclick="fst('gr',this)">Gray</button>
+    <button class="fbtn" onclick="fst('g',this)">🟢 Green</button>
+    <button class="fbtn" onclick="fst('a',this)">🟡 Amber</button>
+    <button class="fbtn" onclick="fst('r',this)">🔴 Red</button>
+    <button class="fbtn" onclick="fst('gr',this)">⚪ Gray</button>
   </div>
   <div id="ml" class="mlist"></div>
   <div id="mod" class="modal">
     <div class="mc">
       <div class="mh">
-        <button class="cbtn" onclick="cls()">&#x2715;</button>
+        <button class="cbtn" onclick="cls()">✕</button>
         <h2 id="mn"></h2>
         <p id="mr"></p>
       </div>
@@ -65,9 +65,14 @@
   </div>
   <script>
     var D = [
-      {n:"Goh Yuan Kang",ro:"M",ph:"+601111567893",cm:75,sq:70,o1m:80,o1t:2,o1v:8,o1r:1,o2m:100,o2t:2,o2v:8,o2r:1},
-      {n:"Janifer Cheah",ro:"VP",ph:"+601111567893",cm:75,sq:55,o1m:65,o1t:3,o1v:7,o1r:1,o2m:100,o2t:3,o2v:7,o2r:1},
-      {n:"Karen Lee",ro:"CMC",ph:"+601111567893",cm:80,sq:75,o1m:85,o1t:1,o1v:8,o1r:2,o2m:100,o2t:1,o2v:8,o2r:2}
+      {n:"Goh Yuan Kang",ro:"M",ph:"+601111567893",cm:75,sq:70,o1m:80,o1t:3,o1v:1,o1r:2,o1j:2,o2m:75,o2t:1,o2v:1,o2r:0,o2j:1},
+      {n:"Janifer Cheah",ro:"VP",ph:"+601111567893",cm:75,sq:47,o1m:80,o1t:1,o1v:1,o1r:1,o1j:8,o2m:75,o2t:1,o2v:1,o2r:8,o2j:1},
+      {n:"Karen Lee",ro:"CMC",ph:"+601111567893",cm:80,sq:53,o1m:85,o1t:2,o1v:1,o1r:2,o1j:1,o2m:100,o2t:1,o2v:1,o2r:1,o2j:1},
+      {n:"William Lim",ro:"Member",ph:"+601111567893",cm:15,sq:10,o1m:20,o1t:6,o1v:12,o1r:36,o1j:34,o2m:75,o2t:2,o2v:1,o2r:12,o2j:10},
+      {n:"Albert Lee",ro:"Member",ph:"+601111567893",cm:15,sq:10,o1m:40,o1t:6,o1v:12,o1r:36,o1j:33,o2m:100,o2t:2,o2v:1,o2r:12,o2j:9},
+      {n:"Hao Mun Yow",ro:"Member",ph:"+601111567893",cm:15,sq:15,o1m:40,o1t:2,o1v:4,o1r:12,o1j:12,o2m:100,o2t:1,o2v:1,o2r:4,o2j:4},
+      {n:"Kelvin Chee",ro:"Member",ph:"+601111567893",cm:15,sq:15,o1m:40,o1t:2,o1v:4,o1r:12,o1j:12,o2m:100,o2t:1,o2v:1,o2r:4,o2j:4},
+      {n:"Khoo Junde",ro:"CEC",ph:"+601111567893",cm:30,sq:25,o1m:35,o1t:6,o1v:12,o1r:22,o1j:11,o2m:75,o2t:1,o2v:1,o2r:1,o2j:2}
     ];
     var cMap={Green:'g',Amber:'a',Red:'r',Gray:'gr'};
     function sc2(v){return v>=75?'Green':v>=50?'Amber':v>=30?'Red':'Gray';}
@@ -91,32 +96,34 @@
       document.getElementById('mn').innerText=m.n;
       document.getElementById('mr').innerText=m.ro;
       var mb=document.getElementById('mb');
-      mb.innerHTML='<div class="ocard sq"><h4>Status Quo</h4><div class="aitem">Points: '+m.sq+' pts</div></div>'+
-        '<div class="ocard o1"><h4>Option 1: Level Up to '+sc2(m.o1m)+'</h4>'+
-        (m.o1t>0?'<div class="aitem">Training: '+m.o1t+' session(s)</div>':'')+
-        (m.o1v>0?'<div class="aitem">Visitors: '+m.o1v+'</div>':'')+
-        (m.o1r>0?'<div class="aitem">Referrals: '+m.o1r+'</div>':'')+
-        '<div class="aitem">Target: '+m.o1m+' pts</div></div>'+
-        '<div class="ocard o2"><h4>Option 2: Go Green</h4>'+
-        (m.o2t>0?'<div class="aitem">Training: '+m.o2t+' session(s)</div>':'')+
-        (m.o2v>0?'<div class="aitem">Visitors: '+m.o2v+'</div>':'')+
-        (m.o2r>0?'<div class="aitem">Referrals: '+m.o2r+'</div>':'')+
-        '<div class="aitem">Target: '+m.o2m+' pts</div></div>'+
+      mb.innerHTML='<div class="ocard sq"><h4>🎯 Your Targets</h4><div class="aitem">Nothing done: '+m.sq+' pts</div></div>'+
+        '<div class="ocard o1"><h4>Option 1: Level Up to '+sc2(m.o1m)+' ('+m.o1m+' pts)</h4>'+
+        (m.o1t>0?'<div class="aitem">🎓 '+m.o1t+' x Training</div>':'')+
+        (m.o1v>0?'<div class="aitem">🤝 '+m.o1v+' x visitor to invite</div>':'')+
+        (m.o1j>0?'<div class="aitem">☕ '+m.o1j+' x 1-2-1s to complete</div>':'')+
+        (m.o1r>0?'<div class="aitem">📋 '+m.o1r+' x referrals to give</div>':'')+'</div>'+
+        '<div class="ocard o2"><h4>Option 2: Go Green ('+m.o2m+' pts)</h4>'+
+        (m.o2t>0?'<div class="aitem">🎓 '+m.o2t+' x Training</div>':'')+
+        (m.o2v>0?'<div class="aitem">🤝 '+m.o2v+' x visitor to invite</div>':'')+
+        (m.o2j>0?'<div class="aitem">☕ '+m.o2j+' x 1-2-1s to complete</div>':'')+
+        (m.o2r>0?'<div class="aitem">📋 '+m.o2r+' x referrals to give</div>':'')+'</div>'+
         '<button class="wabtn" onclick="snd('+i+')">Send WhatsApp Message</button>';
       document.getElementById('mod').style.display='block';
     }
     function cls(){document.getElementById('mod').style.display='none';}
     function snd(i){
       var m=D[i];
-      var msg='Dear '+m.n+',\n\n*Current MTL: '+m.cm+' ('+sc2(m.cm)+')*\n\n*Status Quo (no effort):* '+m.sq+' pts\n\n*Option 1 - Level Up to '+sc2(m.o1m)+':*\n'+
-        (m.o1t>0?'Training: '+m.o1t+' session(s) ':'')+
-        (m.o1v>0?'Visitors: '+m.o1v+' ':'')+
-        (m.o1r>0?'Referrals: '+m.o1r+' ':'')+
-        'Target: '+m.o1m+' pts\n\n*Option 2 - Go Green (75 pts):*\n'+
-        (m.o2t>0?'Training: '+m.o2t+' session(s) ':'')+
-        (m.o2v>0?'Visitors: '+m.o2v+' ':'')+
-        (m.o2r>0?'Referrals: '+m.o2r+' ':'')+
-        'Target: '+m.o2m+' pts\n\nGiven With Love - BNI Distinction Online';
+      var msg='Chapter: Distinction Online\nMonth: March 2026\n\nDear '+m.n+',\n\n*Current MTL: '+m.cm+' ('+sc2(m.cm)+')*\n\n*🎯 Your Targets (Nothing done = '+m.sq+')*\n\n*Option 1 (+1 — go '+m.o1m+' pts):*\n'+
+        (m.o1t>0?'🎓 '+m.o1t+' x Training\n':'')+
+        (m.o1v>0?'🤝 '+m.o1v+' x visitor to invite\n':'')+
+        (m.o1j>0?'☕ '+m.o1j+' x 1-2-1s to complete\n':'')+
+        (m.o1r>0?'📋 '+m.o1r+' x referrals to give\n':'')+
+        '\n*Option 2 (Maintain/Go Green — '+m.o2m+'+):*\n'+
+        (m.o2t>0?'🎓 '+m.o2t+' x Training\n':'')+
+        (m.o2v>0?'🤝 '+m.o2v+' x visitor to invite\n':'')+
+        (m.o2j>0?'☕ '+m.o2j+' x 1-2-1 to complete\n':'')+
+        (m.o2r>0?'📋 '+m.o2r+' x referrals to give\n':'')+
+        '\nGiven With Love - BNI Distinction Online';
       window.open('https://wa.me/'+m.ph.replace(/[^0-9]/g,'')+'?text='+encodeURIComponent(msg),'_blank');
     }
     render(D);
